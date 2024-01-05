@@ -34,11 +34,11 @@ create table customer (
 	cusID			CHAR(18)		not null,
 	cusname			VARCHAR(10)		not null,
 	cusphone		CHAR(11)		not null,
-	address			VARCHAR(50),
+	address			VARCHAR(512),
 	contact_phone	CHAR(11)		not null,
 	contact_name	VARCHAR(10)		not null,
-	contact_Email	VARCHAR(20),
-	relation		VARCHAR(10)		not null,
+	contact_Email	VARCHAR(128),
+	relation		VARCHAR(128)		not null,
     loanres			CHAR(18),
     accres			CHAR(18),
 	constraint PK_CUSTOMER primary key (cusID),
@@ -173,4 +173,8 @@ begin
 	end if;
 end //
 DELIMITER ;
+
+
+INSERT INTO test.bank (bankname, city, money) VALUES ('888', '重庆', 1111111111111);
+
 

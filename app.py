@@ -12,6 +12,7 @@ from db import *
 app = Flask(__name__, instance_relative_config=True)
 app.secret_key = 'lab3'
 
+
 # 对app执行请求页面地址到函数的绑定
 @app.route("/", methods=["GET", "POST"])
 @app.route("/login", methods=["GET", "POST"])
@@ -21,7 +22,7 @@ def login():
         # 客户端在login页面发起的POST请求
         username = request.form["username"]
         password = request.form["password"]
-        ipaddr   = request.form["ipaddr"]
+        ipaddr = request.form["ipaddr"]
         database = request.form["database"]
 
         db = db_login(username, password, ipaddr, database)
@@ -30,14 +31,14 @@ def login():
         if db == None:
             return render_template("login_fail.html")
         else:
-        # 登录成功
+            # 登录成功
             session['username'] = username
             session['password'] = password
             session['ipaddr'] = ipaddr
             session['database'] = database
 
             return redirect(url_for('menu'))
-    else :
+    else:
         # 客户端GET 请求login页面时
         return render_template("login.html")
 
@@ -55,6 +56,7 @@ def menu():
             return redirect(url_for("statistics_menu"))
     else:
         return render_template("menu.html")
+
 
 @app.route("/customer/customer_menu", methods=["GET", "POST"])
 def customer_menu():
@@ -74,11 +76,12 @@ def customer_menu():
     else:
         return render_template("customer/menu.html")
 
+
 @app.route("/customer/insert", methods=["GET", "POST"])
 def insert_customer():
     if 'username' in session:
-        db = db_login(session['username'], session['password'], 
-                        session['ipaddr'], session['database'])
+        db = db_login(session['username'], session['password'],
+                      session['ipaddr'], session['database'])
     else:
         return redirect(url_for('login'))
     if request.method == "POST":
@@ -92,6 +95,7 @@ def insert_customer():
         relation = request.form["relation"]
         if "'" in cusname:
             db_close(db)
+            print('名字中有特殊字符')
             return redirect(url_for('customer_menu'))
         db_insert_customer(db, cusID, cusname, cusphone, address, contact_phone, contact_name, contact_Email, relation)
         db_close(db)
@@ -103,8 +107,8 @@ def insert_customer():
 @app.route("/customer/delete", methods=["GET", "POST"])
 def delete_customer():
     if 'username' in session:
-        db = db_login(session['username'], session['password'], 
-                    session['ipaddr'], session['database'])
+        db = db_login(session['username'], session['password'],
+                      session['ipaddr'], session['database'])
     else:
         return redirect(url_for('login'))
     if request.method == "POST":
@@ -115,11 +119,12 @@ def delete_customer():
     else:
         return render_template("customer/delete.html")
 
+
 @app.route("/customer/update", methods=["GET", "POST"])
 def update_customer():
     if 'username' in session:
-        db = db_login(session['username'], session['password'], 
-                        session['ipaddr'], session['database'])
+        db = db_login(session['username'], session['password'],
+                      session['ipaddr'], session['database'])
     else:
         return redirect(url_for('login'))
     if request.method == "POST":
@@ -137,28 +142,30 @@ def update_customer():
     else:
         return render_template("customer/update.html")
 
+
 @app.route("/customer/search", methods=["GET", "POST"])
 def search_customer():
     if 'username' in session:
-        db = db_login(session['username'], session['password'], 
-                        session['ipaddr'], session['database'])
+        db = db_login(session['username'], session['password'],
+                      session['ipaddr'], session['database'])
         tabs = db_search_customer(db)
         db_close(db)
     else:
         return redirect(url_for('login'))
-    
+
     if request.method == "POST":
         if 'back' in request.form:
             return redirect(url_for('customer_menu'))
 
     else:
-        return render_template("customer/search.html", rows = tabs, tablename='Customer')
+        return render_template("customer/search.html", rows=tabs, tablename='Customer')
+
 
 @app.route("/customer/search_input", methods=["GET", "POST"])
 def search_input_customer():
     if 'username' in session:
-            db = db_login(session['username'], session['password'], 
-                    session['ipaddr'], session['database'])
+        db = db_login(session['username'], session['password'],
+                      session['ipaddr'], session['database'])
     else:
         return redirect(url_for('login'))
     if request.method == "POST":
@@ -167,9 +174,10 @@ def search_input_customer():
         cusID = request.form["cusID"]
         tabs = db_search_single_customer(db, cusID)
         db_close(db)
-        return render_template("customer/search_single.html", rows = tabs)
+        return render_template("customer/search_single.html", rows=tabs)
     else:
         return render_template("customer/search_input.html")
+
 
 @app.route("/account/menu", methods=["GET", "POST"])
 def account_menu():
@@ -191,11 +199,12 @@ def account_menu():
     else:
         return render_template("account/menu.html")
 
+
 @app.route("/account/saving_account", methods=["GET", "POST"])
 def open_saving_account():
     if 'username' in session:
-        db = db_login(session['username'], session['password'], 
-                        session['ipaddr'], session['database'])
+        db = db_login(session['username'], session['password'],
+                      session['ipaddr'], session['database'])
     else:
         return redirect(url_for('login'))
     if request.method == "POST":
@@ -211,11 +220,12 @@ def open_saving_account():
     else:
         return render_template("account/saving_account.html")
 
+
 @app.route("/account/checking_account", methods=["GET", "POST"])
 def open_checking_account():
     if 'username' in session:
-        db = db_login(session['username'], session['password'], 
-                        session['ipaddr'], session['database'])
+        db = db_login(session['username'], session['password'],
+                      session['ipaddr'], session['database'])
     else:
         return redirect(url_for('login'))
     if request.method == "POST":
@@ -230,11 +240,12 @@ def open_checking_account():
     else:
         return render_template("account/checking_account.html")
 
+
 @app.route("/account/delete", methods=["GET", "POST"])
 def delete_account():
     if 'username' in session:
-        db = db_login(session['username'], session['password'], 
-                        session['ipaddr'], session['database'])
+        db = db_login(session['username'], session['password'],
+                      session['ipaddr'], session['database'])
     else:
         return redirect(url_for('login'))
     if request.method == "POST":
@@ -245,11 +256,12 @@ def delete_account():
     else:
         return render_template("account/delete.html", tablename='Account')
 
+
 @app.route("/account/update", methods=["GET", "POST"])
 def update_account():
     if 'username' in session:
-        db = db_login(session['username'], session['password'], 
-                        session['ipaddr'], session['database'])
+        db = db_login(session['username'], session['password'],
+                      session['ipaddr'], session['database'])
     else:
         return redirect(url_for('login'))
     if request.method == "POST":
@@ -264,11 +276,12 @@ def update_account():
     else:
         return render_template("account/update.html")
 
+
 @app.route("/account/search", methods=["GET", "POST"])
 def search_account():
     if 'username' in session:
-        db = db_login(session['username'], session['password'], 
-                        session['ipaddr'], session['database'])
+        db = db_login(session['username'], session['password'],
+                      session['ipaddr'], session['database'])
         tabs = db_search_account(db)
         db_close(db)
     else:
@@ -278,12 +291,13 @@ def search_account():
             return redirect(url_for('account_menu'))
     else:
         return render_template("account/search.html", rows=tabs, tablename='Account')
-        
+
+
 @app.route("/account/search_input", methods=["GET", "POST"])
 def search_input_account():
     if 'username' in session:
-            db = db_login(session['username'], session['password'], 
-                    session['ipaddr'], session['database'])
+        db = db_login(session['username'], session['password'],
+                      session['ipaddr'], session['database'])
     else:
         return redirect(url_for('login'))
     if request.method == "POST":
@@ -292,9 +306,10 @@ def search_input_account():
         accountID = request.form["accountID"]
         tabs = db_search_single_account(db, accountID)
         db_close(db)
-        return render_template("account/search_single.html", rows = tabs)
+        return render_template("account/search_single.html", rows=tabs)
     else:
         return render_template("account/search_input.html")
+
 
 @app.route("/loan/menu", methods=["GET", "POST"])
 def loan_menu():
@@ -314,11 +329,12 @@ def loan_menu():
     else:
         return render_template("loan/menu.html")
 
+
 @app.route("/loan/create", methods=["GET", "POST"])
 def create_loan():
     if 'username' in session:
-        db = db_login(session['username'], session['password'], 
-                        session['ipaddr'], session['database'])
+        db = db_login(session['username'], session['password'],
+                      session['ipaddr'], session['database'])
     else:
         return redirect(url_for('login'))
     if request.method == "POST":
@@ -331,11 +347,12 @@ def create_loan():
     else:
         return render_template("loan/create.html")
 
+
 @app.route("/loan/delete", methods=["GET", "POST"])
 def delete_loan():
     if 'username' in session:
-        db = db_login(session['username'], session['password'], 
-                        session['ipaddr'], session['database'])
+        db = db_login(session['username'], session['password'],
+                      session['ipaddr'], session['database'])
     else:
         return redirect(url_for('login'))
 
@@ -347,11 +364,12 @@ def delete_loan():
     else:
         return render_template("loan/delete.html")
 
+
 @app.route("/loan/search", methods=["GET", "POST"])
 def search_loan():
     if 'username' in session:
-        db = db_login(session['username'], session['password'], 
-                        session['ipaddr'], session['database'])
+        db = db_login(session['username'], session['password'],
+                      session['ipaddr'], session['database'])
         tabs = db_search_loan(db)
         db_close(db)
     else:
@@ -360,13 +378,14 @@ def search_loan():
         if 'back' in request.form:
             return redirect(url_for('loan_menu'))
     else:
-        return render_template("loan/search.html", rows = tabs, tablename='Loan')
+        return render_template("loan/search.html", rows=tabs, tablename='Loan')
+
 
 @app.route("/loan/search_input", methods=["GET", "POST"])
 def search_input_loan():
     if 'username' in session:
-            db = db_login(session['username'], session['password'], 
-                    session['ipaddr'], session['database'])
+        db = db_login(session['username'], session['password'],
+                      session['ipaddr'], session['database'])
     else:
         return redirect(url_for('login'))
     if request.method == "POST":
@@ -375,15 +394,16 @@ def search_input_loan():
         loanID = request.form["loanID"]
         tabs = db_search_single_loan(db, loanID)
         db_close(db)
-        return render_template("loan/search_single.html", rows = tabs)
+        return render_template("loan/search_single.html", rows=tabs)
     else:
         return render_template("loan/search_input.html")
+
 
 @app.route("/loan/pay_loan", methods=["GET", "POST"])
 def pay_loan():
     if 'username' in session:
-        db = db_login(session['username'], session['password'], 
-                        session['ipaddr'], session['database'])
+        db = db_login(session['username'], session['password'],
+                      session['ipaddr'], session['database'])
     else:
         return redirect(url_for('login'))
     if request.method == "POST":
@@ -396,6 +416,7 @@ def pay_loan():
         return redirect(url_for('loan_menu'))
     else:
         return render_template("loan/pay_loan.html", tablename='Loan')
+
 
 @app.route("/statistics/menu", methods=["GET", "POST"])
 def statistics_menu():
@@ -413,11 +434,12 @@ def statistics_menu():
     else:
         return render_template("statistics/menu.html")
 
+
 @app.route("/statistics/classify", methods=["GET", "POST"])
 def statistics_classify():
     if 'username' in session:
-        db = db_login(session['username'], session['password'], 
-                        session['ipaddr'], session['database'])
+        db = db_login(session['username'], session['password'],
+                      session['ipaddr'], session['database'])
         tabs1 = db_summary_classify_saving(db)
         tabs2 = db_summary_classify_loan(db)
         db_close(db)
@@ -427,13 +449,14 @@ def statistics_classify():
         if 'back' in request.form:
             return redirect(url_for('statistics_menu'))
     else:
-        return render_template("statistics/classify.html", rows1 = tabs1, rows2 = tabs2)
+        return render_template("statistics/classify.html", rows1=tabs1, rows2=tabs2)
+
 
 @app.route("/statistics/month", methods=["GET", "POST"])
 def statistics_month():
     if 'username' in session:
-        db = db_login(session['username'], session['password'], 
-                        session['ipaddr'], session['database'])
+        db = db_login(session['username'], session['password'],
+                      session['ipaddr'], session['database'])
         tabs = db_summary_month(db)
         db_close(db)
     else:
@@ -442,13 +465,14 @@ def statistics_month():
         if 'back' in request.form:
             return redirect(url_for('statistics_menu'))
     else:
-        return render_template("statistics/month.html", rows = tabs)
+        return render_template("statistics/month.html", rows=tabs)
+
 
 @app.route("/statistics/quarter", methods=["GET", "POST"])
 def statistics_quarter():
     if 'username' in session:
-        db = db_login(session['username'], session['password'], 
-                        session['ipaddr'], session['database'])
+        db = db_login(session['username'], session['password'],
+                      session['ipaddr'], session['database'])
         tabs = db_summary_quarter(db)
         db_close(db)
     else:
@@ -457,13 +481,14 @@ def statistics_quarter():
         if 'back' in request.form:
             return redirect(url_for('statistics_menu'))
     else:
-        return render_template("statistics/quarter.html", rows = tabs)
+        return render_template("statistics/quarter.html", rows=tabs)
+
 
 @app.route("/statistics/year", methods=["GET", "POST"])
 def statistics_year():
     if 'username' in session:
-        db = db_login(session['username'], session['password'], 
-                        session['ipaddr'], session['database'])
+        db = db_login(session['username'], session['password'],
+                      session['ipaddr'], session['database'])
         tabs = db_summary_year(db)
         db_close(db)
     else:
@@ -472,7 +497,8 @@ def statistics_year():
         if 'back' in request.form:
             return redirect(url_for('statistics_menu'))
     else:
-        return render_template("statistics/year.html", rows = tabs)
+        return render_template("statistics/year.html", rows=tabs)
+
 
 # # 请求url为host/table的页面返回结果
 # @app.route("/table", methods=(["GET", "POST"]))
@@ -483,7 +509,7 @@ def statistics_year():
 #                         session['ipaddr'], session['database'])
 #     else:
 #         return redirect(url_for('login'))
-    
+
 #     tabs = db_showtable(db)
 
 #     db_close(db)
@@ -497,12 +523,11 @@ def statistics_year():
 #         return render_template("table.html", rows = tabs, dbname=session['database'])
 
 
-#返回不存在页面的处理
+# 返回不存在页面的处理
 @app.errorhandler(404)
-
 def not_found(e):
     return render_template("404.html")
 
-if __name__ == "__main__":
 
-    app.run(host = "127.0.0.1", port = "8866", debug=True)
+if __name__ == "__main__":
+    app.run(host="127.0.0.1", port="8866", debug=True)
